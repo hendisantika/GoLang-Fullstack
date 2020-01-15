@@ -87,3 +87,13 @@ func (u *User) Validate(action string) error {
 		return nil
 	}
 }
+
+func (u *User) SaveUser(db *gorm.DB) (*User, error) {
+
+	var err error
+	err = db.Debug().Create(&u).Error
+	if err != nil {
+		return &User{}, err
+	}
+	return u, nil
+}
