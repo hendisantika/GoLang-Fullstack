@@ -2,6 +2,8 @@ package models
 
 import (
 	"golang.org/x/crypto/bcrypt"
+	"html"
+	"strings"
 	"time"
 )
 
@@ -29,4 +31,12 @@ func (u *User) BeforeSave() error {
 	}
 	u.Password = string(hashedPassword)
 	return nil
+}
+
+func (u *User) Prepare() {
+	u.ID = 0
+	u.Nickname = html.EscapeString(strings.TrimSpace(u.Nickname))
+	u.Email = html.EscapeString(strings.TrimSpace(u.Email))
+	u.CreatedAt = time.Now()
+	u.UpdatedAt = time.Now()
 }
