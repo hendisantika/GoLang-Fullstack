@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"html"
 	"strings"
 	"time"
@@ -23,4 +24,18 @@ func (p *Post) Prepare() {
 	p.Author = User{}
 	p.CreatedAt = time.Now()
 	p.UpdatedAt = time.Now()
+}
+
+func (p *Post) Validate() error {
+
+	if p.Title == "" {
+		return errors.New("Required Title")
+	}
+	if p.Content == "" {
+		return errors.New("Required Content")
+	}
+	if p.AuthorID < 1 {
+		return errors.New("Required Author")
+	}
+	return nil
 }
