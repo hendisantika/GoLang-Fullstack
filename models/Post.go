@@ -87,3 +87,20 @@ func (p *Post) FindPostByID(db *gorm.DB, pid uint64) (*Post, error) {
 	}
 	return p, nil
 }
+
+func (p *Post) UpdateAPost(db *gorm.DB) (*Post, error) {
+
+	var err error
+
+	err = db.Debug().Model(&Post{}).Where("id = ?", p.ID).Updates(Post{Title: p.Title, Content: p.Content, UpdatedAt: time.Now()}).Error
+	if err != nil {
+		return &Post{}, err
+	}
+	if p.ID != 0 {
+		err = db.Debug().Model(&User{}).Where("id = ?", p.AuthorID).Take(&p.Author).Error
+		if err != nil {
+			return &Post{}, err
+		}
+	}
+	return p, nil
+}
