@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"golang.org/x/crypto/bcrypt"
 	"html"
 	"strings"
@@ -39,4 +40,50 @@ func (u *User) Prepare() {
 	u.Email = html.EscapeString(strings.TrimSpace(u.Email))
 	u.CreatedAt = time.Now()
 	u.UpdatedAt = time.Now()
+}
+
+func (u *User) Validate(action string) error {
+	switch strings.ToLower(action) {
+	case "update":
+		if u.Nickname == "" {
+			return errors.New("Required Nickname")
+		}
+		if u.Password == "" {
+			return errors.New("Required Password")
+		}
+		if u.Email == "" {
+			return errors.New("Required Email")
+		}
+		if err := checkmail.ValidateFormat(u.Email); err != nil {
+			return errors.New("Invalid Email")
+		}
+
+		return nil
+	case "login":
+		if u.Password == "" {
+			return errors.New("Required Password")
+		}
+		if u.Email == "" {
+			return errors.New("Required Email")
+		}
+		if err := checkmail.ValidateFormat(u.Email); err != nil {
+			return errors.New("Invalid Email")
+		}
+		return nil
+
+	default:
+		if u.Nickname == "" {
+			return errors.New("Required Nickname")
+		}
+		if u.Password == "" {
+			return errors.New("Required Password")
+		}
+		if u.Email == "" {
+			return errors.New("Required Email")
+		}
+		if err := checkmail.ValidateFormat(u.Email); err != nil {
+			return errors.New("Invalid Email")
+		}
+		return nil
+	}
 }
