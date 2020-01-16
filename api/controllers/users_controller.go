@@ -40,3 +40,15 @@ func (server *Server) CreateUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Location", fmt.Sprintf("%s%s/%d", r.Host, r.RequestURI, userCreated.ID))
 	responses.JSON(w, http.StatusCreated, userCreated)
 }
+
+func (server *Server) GetUsers(w http.ResponseWriter, r *http.Request) {
+
+	user := models.User{}
+
+	users, err := user.FindAllUsers(server.DB)
+	if err != nil {
+		responses.ERROR(w, http.StatusInternalServerError, err)
+		return
+	}
+	responses.JSON(w, http.StatusOK, users)
+}
