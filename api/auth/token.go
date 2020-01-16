@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
@@ -34,4 +35,17 @@ func TokenValid(r *http.Request) error {
 		Pretty(claims)
 	}
 	return nil
+}
+
+func ExtractToken(r *http.Request) string {
+	keys := r.URL.Query()
+	token := keys.Get("token")
+	if token != "" {
+		return token
+	}
+	bearerToken := r.Header.Get("Authorization")
+	if len(strings.Split(bearerToken, " ")) == 2 {
+		return strings.Split(bearerToken, " ")[1]
+	}
+	return ""
 }
