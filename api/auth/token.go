@@ -1,7 +1,9 @@
 package auth
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -72,4 +74,15 @@ func ExtractTokenID(r *http.Request) (uint32, error) {
 		return uint32(uid), nil
 	}
 	return 0, nil
+}
+
+//Pretty display the claims licely in the terminal
+func Pretty(data interface{}) {
+	b, err := json.MarshalIndent(data, "", " ")
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	fmt.Println(string(b))
 }
