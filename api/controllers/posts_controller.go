@@ -49,3 +49,15 @@ func (server *Server) CreatePost(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Lacation", fmt.Sprintf("%s%s/%d", r.Host, r.URL.Path, postCreated.ID))
 	responses.JSON(w, http.StatusCreated, postCreated)
 }
+
+func (server *Server) GetPosts(w http.ResponseWriter, r *http.Request) {
+
+	post := models.Post{}
+
+	posts, err := post.FindAllPosts(server.DB)
+	if err != nil {
+		responses.ERROR(w, http.StatusInternalServerError, err)
+		return
+	}
+	responses.JSON(w, http.StatusOK, posts)
+}
